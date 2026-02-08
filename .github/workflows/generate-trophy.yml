@@ -19,14 +19,14 @@ jobs:
           GITHUB_TOKEN1: ${{ secrets.GITHUB_PAT }}
           GITHUB_USERNAME: perpouh
           GITHUB_API: https://api.github.com/graphql
-          PORT: 80
+          PORT: 8080
         run: |
           deno run -A main.ts &
           sleep 2
       - name: Generate Trophy
         run: |
           mkdir -p public
-          curl http://localhost:${PORT:-80}/ -o ./public/trophy.svg
+          curl http://localhost:${PORT:-8080}/ -o ./public/trophy.svg
       - name: Commit and Push to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
