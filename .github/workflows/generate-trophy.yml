@@ -1,0 +1,34 @@
+name: Generate Trophy
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  generate-trophy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Run server (background)
+        env:
+          GITHUB_TOKEN1: ${{ secrets.GITHUB_PAT }}
+          GITHUB_USERNAME: perpouh
+          GITHUB_API: https://api.github.com/graphql
+          PORT: 80
+        run: |
+          deno run -A main.ts &
+          sleep 2
+      - name: Generate Trophy
+        run: |
+          mkdir -p public
+          curl http://localhost:${PORT:-80}/ -o ./public/trophy.svg
+      - name: Commit and Push to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
