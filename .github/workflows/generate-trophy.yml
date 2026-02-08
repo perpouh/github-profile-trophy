@@ -25,8 +25,8 @@ jobs:
           sleep 2
       - name: Generate Trophy
         run: |
-          mkdir -p public &&
-          curl http://localhost:${PORT:-8080}/ -o ./public/trophy.svg
+          mkdir -p public
+          curl -f -H "Accept: image/svg+xml" http://localhost:${PORT:-8080}/ -o ./public/trophy.svg
       - name: Commit and Push to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
